@@ -15,18 +15,18 @@ func (c RGBColor) B() uint8 {
 }
 
 func (c RGBColor) On(background Color) Style {
-	return Style{fg: optionSome(ColorRGB(c)), bg: optionSome(background)}
+	return NewStyle().FgColor(ColorRGB(c)).BgColor(background)
 }
 func (c RGBColor) OnDefault() Style {
-	return Style{fg: optionSome(ColorRGB(c))}
+	return NewStyle().FgColor(ColorRGB(c))
 }
 
 func (c RGBColor) RenderFg() fmt.Stringer {
-	return stringerString(fmt.Sprintf("\x1b[38;2;%d;%d;%dm", c[0], c[1], c[2]))
+	return string2(fmt.Sprintf("\x1b[38;2;%d;%d;%dm", c[0], c[1], c[2]))
 }
 func (c RGBColor) RenderBg() fmt.Stringer {
-	return stringerString(fmt.Sprintf("\x1b[48;2;%d;%d;%dm", c[0], c[1], c[2]))
+	return string2(fmt.Sprintf("\x1b[48;2;%d;%d;%dm", c[0], c[1], c[2]))
 }
 func (c RGBColor) renderUnderline() fmt.Stringer {
-	return stringerString(fmt.Sprintf("\x1b[58;2;%d;%d;%dm", c[0], c[1], c[2]))
+	return string2(fmt.Sprintf("\x1b[58;2;%d;%d;%dm", c[0], c[1], c[2]))
 }

@@ -18,6 +18,9 @@ func main() {
 		}
 		style := style(anstyle.ColorANSI(color), args.layer, args.effects)
 		printNumber(uint8(fixed), style)
+		if fixed == 7 || fixed == 15 {
+			fmt.Println()
+		}
 	}
 
 	for fixed := 16; fixed < 232; fixed++ {
@@ -45,18 +48,18 @@ func style(color anstyle.Color, layer layer, effects anstyle.Effects) anstyle.St
 	var s anstyle.Style
 	switch layer {
 	case layerFg:
-		s = anstyle.NewStyle().FgColor(&color)
+		s = anstyle.NewStyle().FgColor(color)
 	case layerBg:
-		s = anstyle.NewStyle().BgColor(&color)
+		s = anstyle.NewStyle().BgColor(color)
 	case layerUnderline:
-		s = anstyle.NewStyle().UnderlineColor(&color)
+		s = anstyle.NewStyle().UnderlineColor(color)
 	}
 	s = s.Effects(s.GetEffects().Insert(effects))
 	return s
 }
 
 func printNumber(fixed uint8, style anstyle.Style) (int, error) {
-	return fmt.Printf("%v%3d%#v", style, fixed, style)
+	return fmt.Printf("%v %X%v", style.Render(), fixed, style.RenderReset())
 }
 
 type args struct {

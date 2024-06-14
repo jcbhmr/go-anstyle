@@ -23,8 +23,32 @@ const (
 	ANSIColorBrightWhite   ANSIColor = 15
 )
 
+func (c ANSIColor) On(background Color) Style {
+	return NewStyle().FgColor(ColorANSI(c)).BgColor(background)
+}
+
+func (c ANSIColor) OnDefault() Style {
+	return NewStyle().FgColor(ColorANSI(c))
+}
+
+func (c ANSIColor) RenderFg() fmt.Stringer {
+	if c >= 8 {
+		return string2(fmt.Sprintf("\x1b[%dm", 90+c-8))
+	} else {
+		return string2(fmt.Sprintf("\x1b[%dm", 30+c))
+	}
+}
+
+func (c ANSIColor) RenderBg() fmt.Stringer {
+	return string2(fmt.Sprintf("\x1b[%dm", 40+c))
+}
+
+func (c ANSIColor) renderUnderline() fmt.Stringer {
+	return string2(fmt.Sprintf("\x1b[%dm", 58+c))
+}
+
 func (c ANSIColor) Bright(yes bool) ANSIColor {
-	if yes {
+	if yes && c < 8 {
 		return c + 8
 	} else {
 		return c
@@ -33,21 +57,4 @@ func (c ANSIColor) Bright(yes bool) ANSIColor {
 
 func (c ANSIColor) IsBright() bool {
 	return c >= 8
-}
-
-func (c ANSIColor) On(background Color) Style {
-	return Style{fg: optionSome(ColorANSI(c)), bg: optionSome(background)}
-}
-func (c ANSIColor) OnDefault() Style {
-	return Style{fg: optionSome(ColorANSI(c))}
-}
-
-func (c ANSIColor) RenderFg() fmt.Stringer {
-	return stringerString(fmt.Sprintf("\x1b[%dm", 30+c))
-}
-func (c ANSIColor) RenderBg() fmt.Stringer {
-	return stringerString(fmt.Sprintf("\x1b[%dm", 40+c))
-}
-func (c ANSIColor) renderUnderline() fmt.Stringer {
-	return stringerString(fmt.Sprintf("\x1b[%dm", 58+c))
 }

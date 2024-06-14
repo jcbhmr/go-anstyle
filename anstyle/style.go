@@ -6,9 +6,9 @@ import (
 )
 
 type Style struct {
-	fg        option[Color]
-	bg        option[Color]
-	underline option[Color]
+	fg        Color
+	bg        Color
+	underline Color
 	effects   Effects
 }
 
@@ -16,16 +16,16 @@ func NewStyle() Style {
 	return Style{}
 }
 
-func (s Style) FgColor(color *Color) Style {
-	s.fg = optionFromPtr(color)
+func (s Style) FgColor(color Color) Style {
+	s.fg = color
 	return s
 }
-func (s Style) BgColor(color *Color) Style {
-	s.bg = optionFromPtr(color)
+func (s Style) BgColor(color Color) Style {
+	s.bg = color
 	return s
 }
-func (s Style) UnderlineColor(color *Color) Style {
-	s.underline = optionFromPtr(color)
+func (s Style) UnderlineColor(color Color) Style {
+	s.underline = color
 	return s
 }
 func (s Style) Effects(effects Effects) Style {
@@ -33,14 +33,14 @@ func (s Style) Effects(effects Effects) Style {
 	return s
 }
 
-func (s Style) GetFgColor() (Color, bool) {
-	return s.fg.ToOk()
+func (s Style) GetFgColor() Color {
+	return s.fg
 }
-func (s Style) GetBgColor() (Color, bool) {
-	return s.bg.ToOk()
+func (s Style) GetBgColor() Color {
+	return s.bg
 }
-func (s Style) GetUnderlineColor() (Color, bool) {
-	return s.underline.ToOk()
+func (s Style) GetUnderlineColor() Color {
+	return s.underline
 }
 func (s Style) GetEffects() Effects {
 	return s.effects
@@ -82,22 +82,22 @@ func (s Style) Underline() Style {
 func (s Style) Render() fmt.Stringer {
 	sb := ""
 	sb += s.effects.Render().String()
-	if f, ok := s.fg.ToOk(); ok {
-		sb += f.RenderFg().String()
+	if s.fg != nil {
+		sb += s.fg.RenderFg().String()
 	}
-	if b, ok := s.bg.ToOk(); ok {
-		sb += b.RenderBg().String()
+	if s.bg != nil {
+		sb += s.bg.RenderBg().String()
 	}
-	if u, ok := s.underline.ToOk(); ok {
-		sb += u.renderUnderline().String()
+	if s.underline != nil {
+		sb += s.underline.renderUnderline().String()
 	}
-	return stringerString(sb)
+	return string2(sb)
 }
 func (s Style) RenderReset() fmt.Stringer {
-	if s == (Style{}) {
-		return stringerString("\x1b[0m")
+	if s.fg != nil || s.bg != nil || s.underline != nil || !s.effects.IsPlain() {
+		return string2("\x1b[0m")
 	} else {
-		return stringerString("")
+		return string2("")
 	}
 }
 

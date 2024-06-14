@@ -46,22 +46,18 @@ func (e Effects) Set(other Effects, enable bool) Effects {
 	}
 }
 
-func (e Effects) Iter() EffectIter {
-	return newEffectIter(e)
-}
-
 func (e Effects) Render() fmt.Stringer {
 	sb := ""
 	index := 0
 	for index < len(metadata2) {
 		index2 := index
-		index2++
-		effect := Effects(1 << index)
+		index++
+		effect := Effects(1 << index2)
 		if e.Contains(effect) {
-			sb += metadata2[index].escape
+			sb += metadata2[index2].escape
 		}
 	}
-	return stringerString(sb)
+	return string2(sb)
 }
 
 type metadata struct {

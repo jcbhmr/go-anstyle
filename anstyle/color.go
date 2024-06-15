@@ -2,17 +2,33 @@ package anstyle
 
 import "fmt"
 
+// Any ANSI color code scheme
 type Color interface {
 	isColor()
+	// Create a Style with this as the foreground
 	On(background Color) Style
+	// Create a Style with this as the foreground
 	OnDefault() Style
+	// Render the ANSI code for a foreground color
 	RenderFg() fmt.Stringer
+	// Render the ANSI code for a background color
 	RenderBg() fmt.Stringer
 	renderUnderline() fmt.Stringer
 }
 
+// Available 4-bit ANSI color palette codes
+//
+// The user’s terminal defines the meaning of the each palette code.
 type ColorANSI ANSIColor
+
+// 256 (8-bit) color support
+//
+// 0..16 are [ANSIColor] palette codes
+// 0..232 map to [RGBColor] color values
+// 232.. map to [RGBColor] gray-scale values
 type ColorANSI256 ANSI256Color
+
+// 24-bit ANSI RGB color codes
 type ColorRGB RGBColor
 
 func (ColorANSI) isColor()    {}

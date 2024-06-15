@@ -1,15 +1,27 @@
+/*
+-effect: csv of effect names to apply; optional
+-layer: layer to apply effects to; optional
+
+![](https://gist.github.com/assets/61068799/476fe491-e970-40fa-90a0-f468e65292e8)
+*/
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
+	"os"
+	"strings"
 
 	"github.com/jcbhmr/go-anstyle/anstyle"
 )
 
 func main() {
 	log.SetFlags(0)
-	args := args{}
+	args, err := argsParse()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	for fixed := 0; fixed < 16; fixed++ {
 		color, ok := anstyle.ANSI256Color(fixed).IntoANSI()
@@ -75,82 +87,56 @@ const (
 	layerUnderline
 )
 
-// func argsParse() (*args, error) {
-// 	res := args{}
-// 	args := lexopt.ParserFromEnv()
-// 	for {
-// 		arg, err := args.Next()
-// 		if err != nil {
-// 			return nil, err
-// 		}
-// 		if arg == nil {
-// 			break
-// 		}
-
-// 		longName, _ := arg.(lexopt.ArgLong)
-// 		if string(longName) == "layer" {
-// 			value, err := args.Value()
-// 			if err != nil {
-// 				return nil, err
-// 			}
-// 			layerAny, err := value.ParseWith(func(s string) (any, error) {
-// 				switch s {
-// 				case "fg":
-// 					return layerFg, nil
-// 				case "bg":
-// 					return layerBg, nil
-// 				case "underline":
-// 					return layerUnderline, nil
-// 				default:
-// 					return layer(0), errors.New("expected values fg, bg, underline")
-// 				}
-// 			})
-// 			if err != nil {
-// 				return nil, err
-// 			}
-// 			res.layer = layerAny.(Layer)
-// 		} else if string(longName) == "effect" {
-// 			effects := [12]struct {
-// 				A string
-// 				B anstyle.Effects
-// 			}{
-// 				{"bold", anstyle.EffectsBold},
-// 				{"dimmed", anstyle.EffectsDimmed},
-// 				{"italic", anstyle.EffectsItalic},
-// 				{"underline", anstyle.EffectsUnderline},
-// 				{"double_underline", anstyle.EffectsDoubleUnderline},
-// 				{"curly_underline", anstyle.EffectsCurlyUnderline},
-// 				{"dotted_underline", anstyle.EffectsDottedUnderline},
-// 				{"dashed_underline", anstyle.EffectsDashedUnderline},
-// 				{"blink", anstyle.EffectsBlink},
-// 				{"invert", anstyle.EffectsInvert},
-// 				{"hidden", anstyle.EffectsHidden},
-// 				{"strikethrough", anstyle.EffectsStrikethrough},
-// 			}
-// 			value, err := args.Value()
-// 			if err != nil {
-// 				return nil, err
-// 			}
-// 			effectAny, err := value.ParseWith(func(s string) (any, error) {
-// 				for _, effect := range effects {
-// 					if effect.A == s {
-// 						return effect.B, nil
-// 					}
-// 				}
-// 				effectKeys := make([]string, len(effects))
-// 				for i, effect := range effects {
-// 					effectKeys[i] = effect.A
-// 				}
-// 				return anstyle.Effects(0), fmt.Errorf("expected one of %s", strings.Join(effectKeys, ", "))
-// 			})
-// 			if err != nil {
-// 				return nil, err
-// 			}
-// 			res.effects = res.effects.Insert(effectAny.(anstyle.Effect))
-// 		} else {
-// 			return nil, arg.Unexpected()
-// 		}
-// 	}
-
-// 	return &res, nil
-// }
+func argsParse() (args, error) {
+	flag2 := flag.NewFlagSet("dump-style", flag.ContinueOnError)
+	var effectFlag string
+	var layerFlag string
+	flag2.StringVar(&effectFlag, "effect", "", "")
+	flag2.StringVar(&layerFlag, "layer", "", "")
+	err := flag2.Parse(os.Args[1:])
+	if err != nil {
+		return args{}, err
+	}
+	var effects anstyle.Effects
+	effectsMap := map[string]anstyle.Effects{
+		"bold":             anstyle.EffectsBold,
+		"dimmed":           anstyle.EffectsDimmed,
+		"italic":           anstyle.EffectsItalic,
+		"underline":        anstyle.EffectsUnderline,
+		"double_underline": anstyle.EffectsDoubleUnderline,
+		"curly_underline":  anstyle.EffectsCurlyUnderline,
+		"dotted_underline": anstyle.EffectsDottedUnderline,
+		"dashed_underline": anstyle.EffectsDashedUnderline,
+		"blink":            anstyle.EffectsBlink,
+		"invert":           anstyle.EffectsInvert,
+		"hidden":           anstyle.EffectsHidden,
+		"strikethrough":    anstyle.EffectsStrikethrough,
+	}
+	if effectFlag == "" {
+		effects = anstyle.EffectsPlain
+	} else {
+		for _, e := range strings.Split(effectFlag, ",") {
+			effects2, ok := effectsMap[e]
+			if !ok {
+				return args{}, fmt.Errorf("invalid effect: %s", e)
+			}
+			effects = effects.Insert(effects2)
+		}
+	}
+	var layer2 layer
+	layerMap := map[string]layer{
+		"fg":        layerFg,
+		"bg":        layerBg,
+		"underline": layerUnderline,
+	}
+	if layerFlag == "" {
+		layer2 = layerFg
+	} else {
+		layer3, ok := layerMap[layerFlag]
+		if !ok {
+			return args{}, fmt.Errorf("invalid layer: %s", layerFlag)
+		}
+		layer2 = layer3
+	}
+	return args{effects: effects, layer: layer2}, nil
+}

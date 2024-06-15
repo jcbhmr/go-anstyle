@@ -40,11 +40,5 @@ Utilities.
 - anstyle-lossy: Convert between anstyle::Color types
 - anstyle-parse: Parsing ANSI Style Escapes
 - anstyle-wincon: Styling legacy Microsoft terminals
-
-# Examples
-
-The core type is Style:
-
-	let style = anstyle::Style::new().bold();
 */
 package anstyle

@@ -1,8 +1,12 @@
-# Rust anstyle for Go
+# anstyle for Go
 
-🦀 Rust anstyle crate ported to Go
+🦀 Rust anstyle project ported to Go
 
 <table align=center><td>
+
+```go
+
+```
 
 </table>
 

@@ -10,8 +10,7 @@
 
 <tr><td>
 
-![image](https://github.com/jcbhmr/go-anstyle/assets/61068799/c81aefff-82e4-44b8-a54f-9b8409941ba6)
-
+![image](https://github.com/jcbhmr/go-anstyle/assets/61068799/c81aefff-82e4-44b8-a54f-9b8409941ba6)<br>
 <sup>[See the example](examples/dump-style)</sup>
 
 </table>

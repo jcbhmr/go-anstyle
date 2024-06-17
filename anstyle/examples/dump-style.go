@@ -1,9 +1,5 @@
-/*
--effect: csv of effect names to apply; optional
--layer: layer to apply effects to; optional
+//go:build ignore
 
-![](https://gist.github.com/assets/61068799/476fe491-e970-40fa-90a0-f468e65292e8)
-*/
 package main
 
 import (

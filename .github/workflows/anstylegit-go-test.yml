@@ -1,0 +1,30 @@
+name: "anstylegit: go test"
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - anstylegit/**
+      - "!anstylegit/README.md"
+      - "!anstylegit/LICENSE"
+      - "!anstylegit/.gitignore"
+  pull_request:
+    branches: ["main"]
+    paths:
+      - anstylegit/**
+      - "!anstylegit/README.md"
+      - "!anstylegit/LICENSE"
+      - "!anstylegit/.gitignore"
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  go-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+          cache-dependency-path: anstylegit/go.mod
+      - run: go test -v
+        working-directory: anstylegit

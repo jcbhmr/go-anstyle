@@ -16,8 +16,8 @@
 </p>
 
 - **[anstyle](anstyle):** 🎨 ANSI color `struct` and `interface`
-<!-- - **[anstream](anstream):** 🌊 Helpers for ANSI output streams
 - **[anstylegit](anstylegit):** 🔸 Parse Git color config to `Style`
+<!-- - **[anstream](anstream):** 🌊 Helpers for ANSI output streams
 - **[anstylelossy](anstylelossy):** 🗑️ Lossy color conversions
 - **[anstylels](anstylels):** 📁 Parse `LS_COLORS` into a `Style` config
 - **[anstyleparse](anstyleparse):** 🔠 Parse ANSI style escapes
@@ -28,11 +28,15 @@
 
 ## Installation
 
+![Go](https://img.shields.io/static/v1?style=for-the-badge&message=Go&color=00ADD8&logo=Go&logoColor=FFFFFF&label=)
+
 You're reading the root monorepo readme. 😉 Click the links above 👆 to check out subproject-specific installation instructions.
 
 <sup>Spoiler: it's `go get github.com/jcbhmr/go-anstyle/<subproject>`</sup>
 
 ## Usage
+
+![Go](https://img.shields.io/static/v1?style=for-the-badge&message=Go&color=00ADD8&logo=Go&logoColor=FFFFFF&label=)
 
 ```go
 package main
@@ -54,12 +58,14 @@ func main() {
 
 ## Development
 
+![Go](https://img.shields.io/static/v1?style=for-the-badge&message=Go&color=00ADD8&logo=Go&logoColor=FFFFFF&label=)
+
 Each of the Rust crates from the [rust-cli/anstyle](https://github.com/rust-cli/anstyle) repository are ported to Go in this monorepo as separate Go modules, each with their own `go.mod` file and their own version. Go monorepo versioning works if the Git tag starts with a `<subfolder>/` prefix like `anstyle/v0.1.0`.
 
 - [ ] anstream
 - [ ] anstyle-ansi-term
 - [ ] anstyle-crossterm
-- [ ] anstyle-git
+- [x] anstyle-git
 - [ ] anstyle-lossy
 - [ ] anstyle-ls
 - [ ] anstyle-owo-colors
@@ -71,6 +77,6 @@ Each of the Rust crates from the [rust-cli/anstyle](https://github.com/rust-cli/
 - [ ] anstyle-termcolor
 - [ ] anstyle-wincon
 - [ ] anstyle-yansi
-- [ ] anstyle
+- [x] anstyle
 - [ ] colorchoice-clap
 - [ ] colorchoice
